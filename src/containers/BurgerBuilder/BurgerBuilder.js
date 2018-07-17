@@ -13,12 +13,12 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import * as actionTypes from '../../store/action';
 
 
-const INGREDIENT_PRICES = {
-    salad: 0.5,
-    cheese: 0.4,
-    meat: 1.3,
-    bacon:0.7,
-};
+// const INGREDIENT_PRICES = {
+//     salad: 0.5,
+//     cheese: 0.4,
+//     meat: 1.3,
+//     bacon:0.7,
+// };
 
 class BurgerBuilder extends Component{
     // constructor(props){
@@ -58,32 +58,32 @@ class BurgerBuilder extends Component{
         this.setState({purchasable: sum>0});
     }
 
-    addIngredientHandler = (type) => {
-        const oldCount =  this.state.ingredients[type];
-        const updatedCount =   oldCount + 1;
-        const updatedIngredients = {
-            ...this.state.ingredients
-        };
-        updatedIngredients[type] = updatedCount;
-        const priceAddition= INGREDIENT_PRICES[type];
-        const oldPrice= this.state.totalPrice;
-        const newPrice=oldPrice+priceAddition;
-        this.setState({totalPrice: newPrice, ingredients:updatedIngredients});
-        this.updatePurchaseState(updatedIngredients);
-    }
-    removeIngredientHandler = (type) => {
-        const oldCount =  this.state.ingredients[type];
-        const updatedCount =   oldCount - 1;        
-        const updatedIngredients = {
-            ...this.state.ingredients
-        };
-        updatedIngredients[type] = updatedCount;
-        const priceDeduction= INGREDIENT_PRICES[type];
-        const oldPrice= this.state.totalPrice;
-        const newPrice=oldPrice-priceDeduction;
-        this.setState({totalPrice: newPrice, ingredients:updatedIngredients});
-        this.updatePurchaseState(updatedIngredients);
-    }
+    // addIngredientHandler = (type) => {
+    //     const oldCount =  this.state.ingredients[type];
+    //     const updatedCount =   oldCount + 1;
+    //     const updatedIngredients = {
+    //         ...this.state.ingredients
+    //     };
+    //     updatedIngredients[type] = updatedCount;
+    //     const priceAddition= INGREDIENT_PRICES[type];
+    //     const oldPrice= this.state.totalPrice;
+    //     const newPrice=oldPrice+priceAddition;
+    //     this.setState({totalPrice: newPrice, ingredients:updatedIngredients});
+    //     this.updatePurchaseState(updatedIngredients);
+    // }
+    // removeIngredientHandler = (type) => {
+    //     const oldCount =  this.state.ingredients[type];
+    //     const updatedCount =   oldCount - 1;        
+    //     const updatedIngredients = {
+    //         ...this.state.ingredients
+    //     };
+    //     updatedIngredients[type] = updatedCount;
+    //     const priceDeduction= INGREDIENT_PRICES[type];
+    //     const oldPrice= this.state.totalPrice;
+    //     const newPrice=oldPrice-priceDeduction;
+    //     this.setState({totalPrice: newPrice, ingredients:updatedIngredients});
+    //     this.updatePurchaseState(updatedIngredients);
+    // }
 
     purchaseHandler = () => {
         this.setState({purchasing: true});
@@ -154,13 +154,13 @@ class BurgerBuilder extends Component{
                             disabled = {disabledInfo}
                             purchasable={this.state.purchasable}
                             ordered={this.purchaseHandler}
-                            price = {this.state.totalPrice}/>
+                            price = {this.props.totPrice}/>
                     </Fragment>);
             orderSummary =<OrderSummary 
                     ingredients={this.props.ings }
                     purchaseCanceled={this.purchaseCancelHandler}
                     purchaseContinue={this.purchaseContinueHandler}
-                    price = {this.state.totalPrice}/>;
+                    price = {this.props.totPrice}/>;
         }
 
         if (this.state.loading){
@@ -185,14 +185,15 @@ const mapStateToProps = state => {
     // console.log(state)
     return {
         ings: state.ingredients,
+        totPrice: state.totalPrice,
     }
 }
 
 
 const mapDispatchToProps = dispatch => {
     return {
-        onIngredientAdded: (ingName) =>{console.log(actionTypes.ADD_INGREDIENT+" "+ingName);return({type: actionTypes.ADD_INGREDIENT,ingredientName:ingName})},
-        onIngredientRemove: (ingName) => ({type: actionTypes.REMOVE_INGREDIENT,ingredientName:ingName})
+        onIngredientAdded: (ingName) =>dispatch({type: actionTypes.ADD_INGREDIENT,ingredientName:ingName}),
+        onIngredientRemove: (ingName) => dispatch({type: actionTypes.REMOVE_INGREDIENT,ingredientName:ingName})
     }
 }
 
