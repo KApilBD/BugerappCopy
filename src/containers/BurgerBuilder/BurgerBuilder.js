@@ -29,7 +29,7 @@ class BurgerBuilder extends Component{
     state = {
         // ingredients: null,
         totalPrice:4,
-        purchasable:false,
+        // purchasable:false,
         purchasing: false,
         loading:false,
         error:null,
@@ -55,7 +55,7 @@ class BurgerBuilder extends Component{
             .reduce((sum, el) => {
                 return sum+el;
             },0);
-        this.setState({purchasable: sum>0});
+        return sum>0;
     }
 
     // addIngredientHandler = (type) => {
@@ -94,6 +94,9 @@ class BurgerBuilder extends Component{
     }
     
     purchaseContinueHandler = ()=>{
+
+            this.props.history.push('/checkout');
+
         // alert("You Continue!!!")
         // this.setState({loading: true})
         // const order ={
@@ -118,17 +121,17 @@ class BurgerBuilder extends Component{
         //     this.setState({loading:false, purchasing: false})
         // });
     
-        const queryParam = [];
-        for (let i in this.state.ingredients){
-            queryParam.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));  
-        }
+        // const queryParam = [];
+        // for (let i in this.state.ingredients){
+        //     queryParam.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));  
+        // }
         
-        queryParam.push('price=' + this.state.totalPrice)
+        // queryParam.push('price=' + this.state.totalPrice)
 
-        const queryString = queryParam.join('&');
-        this.props.history.push({
-            pathname: '/checkout',
-            search: '?' +queryString});
+        // const queryString = queryParam.join('&');
+        // this.props.history.push({
+        //     pathname: '/checkout',
+        //     search: '?' +queryString});
     }
 
     render(){
@@ -152,7 +155,7 @@ class BurgerBuilder extends Component{
                             ingredientsAdded={this.props.onIngredientAdded}
                             ingredientsRemoved={this.props.onIngredientRemove}
                             disabled = {disabledInfo}
-                            purchasable={this.state.purchasable}
+                            purchasable={this.updatePurchaseState(this.props.ings)}
                             ordered={this.purchaseHandler}
                             price = {this.props.totPrice}/>
                     </Fragment>);
