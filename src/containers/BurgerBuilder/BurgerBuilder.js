@@ -10,7 +10,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import * as actionTypes from '../../store/action';
+import * as burgerBuilderActions from '../../store/actions/index';
 
 
 // const INGREDIENT_PRICES = {
@@ -31,11 +31,14 @@ class BurgerBuilder extends Component{
         totalPrice:4,
         // purchasable:false,
         purchasing: false,
-        loading:false,
-        error:null,
+        // loading:false,
+        // error:null,
     }
 
     componentDidMount (){
+
+        this.props.onInitIngredients();
+
         // axios.get('https://burgerpro-ff79f.firebaseio.com/ingredients.json')
         // .then((res)=>{
         //     // console.log(res.data);
@@ -146,7 +149,7 @@ class BurgerBuilder extends Component{
 
         let orderSummary = null;
 
-        let burger =this.state.error ? <h3 style={{textAlign: "center", marginTop:"120Px"}}>Ingedients Out of Stock..!!!</h3>:<Spinner />
+        let burger =this.props.error ? <h3 style={{textAlign: "center", marginTop:"120Px"}}>Ingedients Out of Stock..!!!</h3>:<Spinner />
 
         if (this.props.ings){
             burger = (<Fragment>
@@ -189,14 +192,16 @@ const mapStateToProps = state => {
     return {
         ings: state.ingredients,
         totPrice: state.totalPrice,
+        error: state.error,
     }
 }
 
 
 const mapDispatchToProps = dispatch => {
     return {
-        onIngredientAdded: (ingName) =>dispatch({type: actionTypes.ADD_INGREDIENT,ingredientName:ingName}),
-        onIngredientRemove: (ingName) => dispatch({type: actionTypes.REMOVE_INGREDIENT,ingredientName:ingName})
+        onIngredientAdded: (ingName) =>dispatch(burgerBuilderActions.addIngredient(ingName)),
+        onIngredientRemove: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName)),
+        onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
     }
 }
 

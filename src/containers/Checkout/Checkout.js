@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Route} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 // import 'url-search-params-polyfill';
 
@@ -30,25 +30,37 @@ class Checkout extends Component {
     //     this.setState({ingredients: ingredients, totalPrice: price});
     // }
 
-    checkoutCancelled = ()=>{
+    checkoutCancelled = () => {
         this.props.history.goBack();
     }
 
-    checkoutContinued = ()=>{
+    checkoutContinued = () => {
         this.props.history.replace('/checkout/contact-data');
     }
 
-    render (){
-        return(
-            <div>
-                <CheckoutSummary 
-                    ingredients={this.props.ings}
-                    checkoutCancelled = {this.checkoutCancelled}
-                    checkoutContinued = {this.checkoutContinued} />
-                <Route path={this.props.match.path + '/contact-data'} 
-                       component={ContactData} />
-            </div>
-        )
+    render() {
+
+        let summary = <Redirect to='/' />
+
+        // console.log(summary);
+
+        if (this.props.ings) {
+            summary = (
+                <div>
+                    <CheckoutSummary
+                        ingredients={this.props.ings}
+                        checkoutCancelled={this.checkoutCancelled}
+                        checkoutContinued={this.checkoutContinued} />
+
+                    <Route path={this.props.match.path + '/contact-data'}
+                        component={ContactData} />
+                </div>
+            );
+
+            console.log(summary);
+        }
+
+        return summary;
     }
 }
 
